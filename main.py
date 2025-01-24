@@ -42,6 +42,7 @@ obchodnik_1 = pygame.transform.scale(obchodnik_1, (128, 128))
 obchodnik_1_rect = obchodnik_1.get_rect()
 obchodnik_1_rect.topright = (width-20, 20)
 
+
 # Texty
 coin_text = midle_font.render(f"coins: {coin}", True, black)
 coin_text_rect = coin_text.get_rect()
@@ -51,6 +52,13 @@ my_mane = small_font.render("By HonzikCZI", True, black)
 my_mane_rect = my_mane.get_rect()
 my_mane_rect.topleft = (10, height-20)
 
+obchodnik_text = small_font.render(f"{cena_klikani} Coin", True, black)
+obchodnik_text_rect = obchodnik_text.get_rect()
+obchodnik_text_rect.topright = (width-33, 125)
+
+klikani_text = small_font.render(f"X{klikani}", True, white)
+klikani_text_rect = klikani_text.get_rect()
+klikani_text_rect.topright=(width-80,80)
 # Frame rate control
 clock = pygame.time.Clock()
 
@@ -83,8 +91,16 @@ while running:
 
             # Bylo kliknuto na myš
             if mys_rect.collidepoint(click_x, click_y):
-                coin += klikani 
+                coin += 1*klikani 
                 click_sound.play()
+
+            if obchodnik_1_rect.collidepoint(click_x, click_y):
+                if coin >= cena_klikani:
+                    click_sound.play()
+                    coin -= cena_klikani
+                    cena_klikani *= 2
+                    klikani += 1
+
 
     # obrázky
     screen.blit(pozadi, pozadi_rect)
@@ -92,13 +108,18 @@ while running:
     screen.blit(obchodnik_1, obchodnik_1_rect)
 
     # Update text
-    coin_text = midle_font.render(f"coins: {coin}", True, black)
+    coin_text = midle_font.render(f"Coins: {coin}", True, black)
     timeText = midle_font.render(f"Time: {pygame.time.get_ticks()//1000}", True, black)
+    obchodnik_text = small_font.render(f"$ {cena_klikani}", True, black)
+    klikani_text = small_font.render(f"X{klikani+1}", True, white)
     
     # texty
     screen.blit(coin_text, coin_text_rect)
     screen.blit(timeText, (10, 50))
     screen.blit(my_mane, my_mane_rect)
+    screen.blit(obchodnik_text, obchodnik_text_rect)
+    screen.blit(klikani_text, klikani_text_rect)
+
     
     # update obrazovky
     pygame.display.update()
