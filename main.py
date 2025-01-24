@@ -4,8 +4,8 @@ import pygame
 pygame.init()
 
 # Nastavení obrazovky
-width = 1280
-height = 720
+width = 1920
+height = 1080
 fullscreen = True
 screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 pygame.display.set_caption("CLIKER GAME")
@@ -24,6 +24,7 @@ white = (255, 255, 255)
 # Fonty 
 big_font = pygame.font.Font("fonts/Emulogic.ttf", 50)
 midle_font = pygame.font.Font("fonts/Emulogic.ttf", 30)
+small_font = pygame.font.Font("fonts/Emulogic.ttf",15)
 
 # Obrazky
 pozadi = pygame.image.load("img/obrazek.png")
@@ -36,10 +37,19 @@ mys = pygame.transform.scale(mys, (200, 200))
 mys_rect = mys.get_rect()  
 mys_rect.center = (width//2, height//2)
 
+obchodnik_1 = pygame.image.load("img/Terminal.png")
+obchodnik_1 = pygame.transform.scale(obchodnik_1, (128, 128))
+obchodnik_1_rect = obchodnik_1.get_rect()
+obchodnik_1_rect.topright = (width-20, 20)
+
 # Texty
 coin_text = midle_font.render(f"coins: {coin}", True, black)
 coin_text_rect = coin_text.get_rect()
 coin_text_rect.topleft = (10, 10)
+
+my_mane = small_font.render("By HonzikCZI", True, black)
+my_mane_rect = my_mane.get_rect()
+my_mane_rect.topleft = (10, height-20)
 
 # Frame rate control
 clock = pygame.time.Clock()
@@ -73,12 +83,13 @@ while running:
 
             # Bylo kliknuto na myš
             if mys_rect.collidepoint(click_x, click_y):
-                coin += 1 
+                coin += klikani 
                 click_sound.play()
 
     # obrázky
     screen.blit(pozadi, pozadi_rect)
     screen.blit(mys, mys_rect)
+    screen.blit(obchodnik_1, obchodnik_1_rect)
 
     # Update text
     coin_text = midle_font.render(f"coins: {coin}", True, black)
@@ -87,6 +98,7 @@ while running:
     # texty
     screen.blit(coin_text, coin_text_rect)
     screen.blit(timeText, (10, 50))
+    screen.blit(my_mane, my_mane_rect)
     
     # update obrazovky
     pygame.display.update()
