@@ -118,6 +118,11 @@ while running:
                     cena_klikani -= cena_klikani // 3
                     klikani += 1
 
+            if obchodnik_2_rect.collidepoint(click_x, click_y):
+                if coin >= cena_autoclicku:
+                    click_sound.play()
+                    coin -= cena_autoclicku
+
 
     # obrázky
     screen.blit(pozadi, pozadi_rect)
@@ -141,7 +146,6 @@ while running:
     screen.blit(obchodnik_text2, obchodnik_text_rect2)
     screen.blit(per_second_text, per_second_text_rect)
 
-    
     # update obrazovky
     pygame.display.update()
 
