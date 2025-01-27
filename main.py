@@ -15,7 +15,8 @@ fps = 120
 coin = 0
 cena_klikani = 50
 klikani = 1
-#cena_autoclicku = 500 - možná bude ve hře
+krater = 2
+cena_autoclicku = 500 
 
 # Barvy
 black = (0, 0, 0)
@@ -42,6 +43,10 @@ obchodnik_1 = pygame.transform.scale(obchodnik_1, (128, 128))
 obchodnik_1_rect = obchodnik_1.get_rect()
 obchodnik_1_rect.topright = (width-20, 20)
 
+obchodnik_2 = pygame.image.load("img/Terminal.png")
+obchodnik_2 = pygame.transform.scale(obchodnik_1, (128, 128))
+obchodnik_2_rect = obchodnik_1.get_rect()
+obchodnik_2_rect.topright = (width-20, 140)
 
 # Texty
 coin_text = midle_font.render(f"coins: {coin}", True, black)
@@ -59,6 +64,15 @@ obchodnik_text_rect.topright = (width-33, 125)
 klikani_text = small_font.render(f"X{klikani}", True, white)
 klikani_text_rect = klikani_text.get_rect()
 klikani_text_rect.topright=(width-80,80)
+
+obchodnik_text2 = small_font.render(f"{cena_autoclicku} Coin", True, black)
+obchodnik_text_rect2 = obchodnik_text.get_rect()
+obchodnik_text_rect2.topright = (width-33, 245)
+
+per_second_text = small_font.render("10", True, white)
+per_second_text_rect = per_second_text.get_rect()
+per_second_text_rect.topright = (width-80, 200)
+
 # Frame rate control
 clock = pygame.time.Clock()
 
@@ -68,7 +82,9 @@ pygame.mixer.music.load("songs/music_pozadi.mp3")
 pygame.mixer.music.set_volume(0.5)
 click_sound.set_volume(0.4)
 
-# Hlavní smyčka hry
+####################
+# Hlavní smyčka hry#
+####################
 running = True
 pygame.mixer.music.play(-1, 0.0)
 while running:
@@ -98,7 +114,8 @@ while running:
                 if coin >= cena_klikani:
                     click_sound.play()
                     coin -= cena_klikani
-                    cena_klikani *= 2
+                    cena_klikani *= krater
+                    cena_klikani -= cena_klikani // 3
                     klikani += 1
 
 
@@ -106,12 +123,14 @@ while running:
     screen.blit(pozadi, pozadi_rect)
     screen.blit(mys, mys_rect)
     screen.blit(obchodnik_1, obchodnik_1_rect)
+    screen.blit(obchodnik_2, obchodnik_2_rect)
 
     # Update text
     coin_text = midle_font.render(f"Coins: {coin}", True, black)
     timeText = midle_font.render(f"Time: {pygame.time.get_ticks()//1000}", True, black)
     obchodnik_text = small_font.render(f"$ {cena_klikani}", True, black)
     klikani_text = small_font.render(f"X{klikani+1}", True, white)
+    obchodnik_text2 = small_font.render(f"$ {cena_autoclicku}", True, black)
     
     # texty
     screen.blit(coin_text, coin_text_rect)
@@ -119,6 +138,8 @@ while running:
     screen.blit(my_mane, my_mane_rect)
     screen.blit(obchodnik_text, obchodnik_text_rect)
     screen.blit(klikani_text, klikani_text_rect)
+    screen.blit(obchodnik_text2, obchodnik_text_rect2)
+    screen.blit(per_second_text, per_second_text_rect)
 
     
     # update obrazovky
