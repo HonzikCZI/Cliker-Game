@@ -4,19 +4,22 @@ import pygame
 pygame.init()
 
 # Nastavení obrazovky
-width = 1920
-height = 1080
-fullscreen = True
-screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+screen_width = 1920
+screen_height = 1080
+is_fullscreen = True
+screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
 pygame.display.set_caption("CLIKER GAME")
 
 # Nastavení hry
-fps = 120
-coin = 0
-cena_klikani = 50
-klikani = 1
-krater = 2
-cena_autoclicku = 500 
+fps = 60
+coins = 0
+click_upgrade_cost = 50
+click_power = 1
+click_multiplier = 2
+autoclicker_cost = 300
+deltaTime = 0
+autoclicker_coins = 0
+autoclicker_multiplier = 2
 
 # Barvy
 black = (0, 0, 0)
@@ -24,54 +27,56 @@ white = (255, 255, 255)
 
 # Fonty 
 big_font = pygame.font.Font("fonts/Emulogic.ttf", 50)
-midle_font = pygame.font.Font("fonts/Emulogic.ttf", 30)
-small_font = pygame.font.Font("fonts/Emulogic.ttf",15)
+middle_font = pygame.font.Font("fonts/Emulogic.ttf", 30)
+small_font = pygame.font.Font("fonts/Emulogic.ttf", 15)
 
 # Obrazky
-pozadi = pygame.image.load("img/obrazek.png")
-pozadi = pygame.transform.scale(pozadi, (width, height))
-pozadi_rect = pozadi.get_rect()
-pozadi_rect.topleft = (0, 0)
+background_image = pygame.image.load("img/obrazek.png")
+background_image = pygame.transform.scale(background_image, (screen_width, screen_height))
+background_rect = background_image.get_rect()
+background_rect.topleft = (0, 0)
 
-mys = pygame.image.load("img/mouse.png")
-mys = pygame.transform.scale(mys, (200, 200))
-mys_rect = mys.get_rect()  
-mys_rect.center = (width//2, height//2)
+mouse_image = pygame.image.load("img/mouse.png")
+mouse_image = pygame.transform.scale(mouse_image, (200, 200))
+mouse_rect = mouse_image.get_rect()  
+mouse_rect.center = (screen_width // 2, screen_height // 2)
 
-obchodnik_1 = pygame.image.load("img/Terminal.png")
-obchodnik_1 = pygame.transform.scale(obchodnik_1, (128, 128))
-obchodnik_1_rect = obchodnik_1.get_rect()
-obchodnik_1_rect.topright = (width-20, 20)
+click_upgrade_image = pygame.image.load("img/Terminal.png")
+click_upgrade_image = pygame.transform.scale(click_upgrade_image, (128, 128))
+click_upgrade_rect = click_upgrade_image.get_rect()
+click_upgrade_rect.topright = (screen_width - 20, 20)
 
-obchodnik_2 = pygame.image.load("img/Terminal.png")
-obchodnik_2 = pygame.transform.scale(obchodnik_1, (128, 128))
-obchodnik_2_rect = obchodnik_1.get_rect()
-obchodnik_2_rect.topright = (width-20, 140)
+autoclicker_image = pygame.image.load("img/Terminal.png")
+autoclicker_image = pygame.transform.scale(autoclicker_image, (128, 128))
+autoclicker_rect = autoclicker_image.get_rect()
+autoclicker_rect.topright = (screen_width - 20, 140)
 
 # Texty
-coin_text = midle_font.render(f"coins: {coin}", True, black)
-coin_text_rect = coin_text.get_rect()
-coin_text_rect.topleft = (10, 10)
+coins_text = middle_font.render(f"Coins: {coins}", True, black)
+coins_text_rect = coins_text.get_rect()
+coins_text_rect.topleft = (10, 10)
 
-my_mane = small_font.render("By HonzikCZI", True, black)
-my_mane_rect = my_mane.get_rect()
-my_mane_rect.topleft = (10, height-20)
+author_text = small_font.render("By HonzikCZI", True, black)
+author_text_rect = author_text.get_rect()
+author_text_rect.topleft = (10, screen_height - 20)
 
-obchodnik_text = small_font.render(f"{cena_klikani} Coin", True, black)
-obchodnik_text_rect = obchodnik_text.get_rect()
-obchodnik_text_rect.topright = (width-33, 125)
+click_upgrade_text = small_font.render(f"{click_upgrade_cost} Coins", True, black)
+click_upgrade_text_rect = click_upgrade_text.get_rect()
+click_upgrade_text_rect.topright = (screen_width - 33, 125)
 
-klikani_text = small_font.render(f"X{klikani}", True, white)
-klikani_text_rect = klikani_text.get_rect()
-klikani_text_rect.topright=(width-80,80)
+click_power_text = small_font.render(f"X{click_power}", True, white)
+click_power_text_rect = click_power_text.get_rect()
+click_power_text_rect.topright = (screen_width - 80, 80)
 
-obchodnik_text2 = small_font.render(f"{cena_autoclicku} Coin", True, black)
-obchodnik_text_rect2 = obchodnik_text.get_rect()
-obchodnik_text_rect2.topright = (width-33, 245)
+autoclicker_text = small_font.render(f"{autoclicker_cost} Coins", True, black)
+autoclicker_text_rect = autoclicker_text.get_rect()
+autoclicker_text_rect.topright = (screen_width - 33, 245)
 
 per_second_text = small_font.render("10", True, white)
 per_second_text_rect = per_second_text.get_rect()
-per_second_text_rect.topright = (width-80, 200)
+per_second_text_rect.topright = (screen_width - 80, 200)
+
+per_second_ = middle_font.render(f"Per second: {autoclicker_coins}", True, black)
 
 # Frame rate control
 clock = pygame.time.Clock()
@@ -91,59 +96,67 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_F10:
                 running = False
             elif event.key == pygame.K_F5:
-                fullscreen = not fullscreen
-                if fullscreen:
-                    screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+                is_fullscreen = not is_fullscreen
+                if is_fullscreen:
+                    screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
                 else:
-                    screen = pygame.display.set_mode((width, height))
-
-        # Check for mouse button down event
+                    screen = pygame.display.set_mode((screen_width, screen_height))
+        
         if event.type == pygame.MOUSEBUTTONDOWN:
             click_x, click_y = event.pos
 
-            # Bylo kliknuto na myš
-            if mys_rect.collidepoint(click_x, click_y):
-                coin += 1*klikani 
+            if mouse_rect.collidepoint(click_x, click_y):
+                coins += 1 * click_power 
                 click_sound.play()
 
-            if obchodnik_1_rect.collidepoint(click_x, click_y):
-                if coin >= cena_klikani:
+            if click_upgrade_rect.collidepoint(click_x, click_y):
+                if coins >= click_upgrade_cost:
                     click_sound.play()
-                    coin -= cena_klikani
-                    cena_klikani *= krater
-                    cena_klikani -= cena_klikani // 3
-                    klikani += 1
+                    coins -= click_upgrade_cost
+                    click_upgrade_cost *= click_multiplier
+                    click_upgrade_cost -= click_upgrade_cost // 3
+                    click_power += 1
 
-            if obchodnik_2_rect.collidepoint(click_x, click_y):
-                if coin >= cena_autoclicku:
+            if autoclicker_rect.collidepoint(click_x, click_y):
+                if coins >= autoclicker_cost:
                     click_sound.play()
-                    coin -= cena_autoclicku
+                    coins -= autoclicker_cost
+                    autoclicker_coins += 10
+                    autoclicker_cost *= autoclicker_multiplier
+                    autoclicker_cost -= autoclicker_cost // 3
 
+    # per sec
+    deltaTime += 1
+    if deltaTime >= fps:
+        deltaTime = 0
+        coins += autoclicker_coins
+        print (deltaTime, autoclicker_coins)
 
     # obrázky
-    screen.blit(pozadi, pozadi_rect)
-    screen.blit(mys, mys_rect)
-    screen.blit(obchodnik_1, obchodnik_1_rect)
-    screen.blit(obchodnik_2, obchodnik_2_rect)
+    screen.blit(background_image, background_rect)
+    screen.blit(mouse_image, mouse_rect)
+    screen.blit(click_upgrade_image, click_upgrade_rect)
+    screen.blit(autoclicker_image, autoclicker_rect)
 
     # Update text
-    coin_text = midle_font.render(f"Coins: {coin}", True, black)
-    timeText = midle_font.render(f"Time: {pygame.time.get_ticks()//1000}", True, black)
-    obchodnik_text = small_font.render(f"$ {cena_klikani}", True, black)
-    klikani_text = small_font.render(f"X{klikani+1}", True, white)
-    obchodnik_text2 = small_font.render(f"$ {cena_autoclicku}", True, black)
+    coins_text = middle_font.render(f"Coins: {coins}", True, black)
+    time_text = middle_font.render(f"Time: {pygame.time.get_ticks() // 1000}", True, black)
+    click_upgrade_text = small_font.render(f"$ {click_upgrade_cost}", True, black)
+    click_power_text = small_font.render(f"X{click_power + 1}", True, white)
+    autoclicker_text = small_font.render(f"$ {autoclicker_cost}", True, black)
     
     # texty
-    screen.blit(coin_text, coin_text_rect)
-    screen.blit(timeText, (10, 50))
-    screen.blit(my_mane, my_mane_rect)
-    screen.blit(obchodnik_text, obchodnik_text_rect)
-    screen.blit(klikani_text, klikani_text_rect)
-    screen.blit(obchodnik_text2, obchodnik_text_rect2)
+    screen.blit(coins_text, coins_text_rect)
+    screen.blit(time_text, (10, 50))
+    screen.blit(author_text, author_text_rect)
+    screen.blit(click_upgrade_text, click_upgrade_text_rect)
+    screen.blit(click_power_text, click_power_text_rect)
+    screen.blit(autoclicker_text, autoclicker_text_rect)
     screen.blit(per_second_text, per_second_text_rect)
 
     # update obrazovky
