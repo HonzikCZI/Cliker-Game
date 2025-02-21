@@ -76,7 +76,9 @@ per_second_text = small_font.render("10", True, white)
 per_second_text_rect = per_second_text.get_rect()
 per_second_text_rect.topright = (screen_width - 80, 200)
 
-per_second_ = middle_font.render(f"Per second: {autoclicker_coins}", True, black)
+per_second = middle_font.render(f"Per second: {autoclicker_coins}", True, black)
+per_second_rect = per_second.get_rect()
+per_second_rect.center = (screen_width //2, 50)
 
 # Frame rate control
 clock = pygame.time.Clock()
@@ -149,6 +151,8 @@ while running:
     click_upgrade_text = small_font.render(f"$ {click_upgrade_cost}", True, black)
     click_power_text = small_font.render(f"X{click_power + 1}", True, white)
     autoclicker_text = small_font.render(f"$ {autoclicker_cost}", True, black)
+    per_second = middle_font.render(f"Per second: {autoclicker_coins}", True, black)
+
     
     # texty
     screen.blit(coins_text, coins_text_rect)
@@ -158,6 +162,7 @@ while running:
     screen.blit(click_power_text, click_power_text_rect)
     screen.blit(autoclicker_text, autoclicker_text_rect)
     screen.blit(per_second_text, per_second_text_rect)
+    screen.blit(per_second, per_second_rect)
 
     # update obrazovky
     pygame.display.update()
