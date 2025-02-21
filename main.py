@@ -16,10 +16,12 @@ coins = 0
 click_upgrade_cost = 50
 click_power = 1
 click_multiplier = 2
-autoclicker_cost = 300
+autoclicker_cost = 200
 deltaTime = 0
 autoclicker_coins = 0
 autoclicker_multiplier = 2
+autoclicker_krater = 2
+nasobitel = 10
 
 # Barvy
 black = (0, 0, 0)
@@ -128,7 +130,7 @@ while running:
                 if coins >= autoclicker_cost:
                     click_sound.play()
                     coins -= autoclicker_cost
-                    autoclicker_coins += 10
+                    autoclicker_coins += nasobitel
                     autoclicker_cost *= autoclicker_multiplier
                     autoclicker_cost -= autoclicker_cost // 3
 
@@ -138,6 +140,10 @@ while running:
         deltaTime = 0
         coins += autoclicker_coins
         print (deltaTime, autoclicker_coins)
+    
+    if autoclicker_coins == 50 and 100 and 200 and 400 and 800 and 1000:
+        nasobitel = autoclicker_coins * autoclicker_krater
+       
 
     # obrázky
     screen.blit(background_image, background_rect)
