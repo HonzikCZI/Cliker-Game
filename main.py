@@ -6,8 +6,13 @@ pygame.init()
 # Nastavení obrazovky
 screen_width = 1920
 screen_height = 1080
-is_fullscreen = True
-screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+is_fullscreen = False
+
+if is_fullscreen:
+    screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+else:
+    screen = pygame.display.set_mode((screen_width, screen_height))
+
 pygame.display.set_caption("CLIKER GAME")
 
 # Nastavení hry
@@ -22,6 +27,7 @@ autoclicker_coins = 0
 autoclicker_multiplier = 2
 autoclicker_krater = 2
 nasobitel = 10
+odpocet = 0
 
 # Barvy
 black = (0, 0, 0)
@@ -74,7 +80,7 @@ autoclicker_text = small_font.render(f"{autoclicker_cost} Coins", True, black)
 autoclicker_text_rect = autoclicker_text.get_rect()
 autoclicker_text_rect.topright = (screen_width - 33, 245)
 
-per_second_text = small_font.render("10", True, white)
+per_second_text = small_font.render(f"{nasobitel}", True, white)
 per_second_text_rect = per_second_text.get_rect()
 per_second_text_rect.topright = (screen_width - 80, 200)
 
@@ -124,13 +130,18 @@ while running:
                     coins -= click_upgrade_cost
                     click_upgrade_cost *= click_multiplier
                     click_upgrade_cost -= click_upgrade_cost // 3
-                    click_power += 1
 
             if autoclicker_rect.collidepoint(click_x, click_y):
                 if coins >= autoclicker_cost:
                     click_sound.play()
                     coins -= autoclicker_cost
                     autoclicker_coins += nasobitel
+                    odpocet += 1
+
+                    if odpocet == 5:
+                        nasobitel *= autoclicker_krater
+                        odpocet = 0 
+
                     autoclicker_cost *= autoclicker_multiplier
                     autoclicker_cost -= autoclicker_cost // 3
 
@@ -139,10 +150,10 @@ while running:
     if deltaTime >= fps:
         deltaTime = 0
         coins += autoclicker_coins
-        print (deltaTime, autoclicker_coins)
+        #print (deltaTime, autoclicker_coins)
+        print (odpocet)
     
-    if autoclicker_coins == 50 and 100 and 200 and 400 and 800 and 1000:
-        nasobitel = autoclicker_coins * autoclicker_krater
+
        
 
     # obrázky
@@ -158,6 +169,7 @@ while running:
     click_power_text = small_font.render(f"X{click_power + 1}", True, white)
     autoclicker_text = small_font.render(f"$ {autoclicker_cost}", True, black)
     per_second = middle_font.render(f"Per second: {autoclicker_coins}", True, black)
+    per_second_text = small_font.render(f"{nasobitel}", True, white)
 
     
     # texty
