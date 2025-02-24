@@ -129,6 +129,7 @@ while running:
                     click_sound.play()
                     coins -= click_upgrade_cost
                     click_upgrade_cost *= click_multiplier
+                    click_power += 1
                     click_upgrade_cost -= click_upgrade_cost // 3
 
             if autoclicker_rect.collidepoint(click_x, click_y):
