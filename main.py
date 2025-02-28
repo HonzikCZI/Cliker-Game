@@ -45,17 +45,17 @@ background_rect = background_image.get_rect()
 background_rect.topleft = (0, 0)
 
 mouse_image = pygame.image.load("img/mouse.png")
-mouse_image = pygame.transform.scale(mouse_image, (200, 200))
+mouse_image = pygame.transform.scale(mouse_image, (500, 500))
 mouse_rect = mouse_image.get_rect()  
 mouse_rect.center = (screen_width // 2, screen_height // 2)
 
-click_upgrade_image = pygame.image.load("img/Terminal.png")
-click_upgrade_image = pygame.transform.scale(click_upgrade_image, (128, 128))
+click_upgrade_image = pygame.image.load("img/crate.png")
+click_upgrade_image = pygame.transform.scale(click_upgrade_image, (150, 150))
 click_upgrade_rect = click_upgrade_image.get_rect()
 click_upgrade_rect.topright = (screen_width - 20, 20)
 
-autoclicker_image = pygame.image.load("img/Terminal.png")
-autoclicker_image = pygame.transform.scale(autoclicker_image, (128, 128))
+autoclicker_image = pygame.image.load("img/crate.png")
+autoclicker_image = pygame.transform.scale(autoclicker_image, (150, 150))
 autoclicker_rect = autoclicker_image.get_rect()
 autoclicker_rect.topright = (screen_width - 20, 140)
 
